@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: ReplicaSet
+metadata:
+  name: nginx-pod-https
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: https
+  template:
+    metadata:
+      labels:
+        app: https
+    spec:
+      containers:
+        - image: nginx
+          name: web-server
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 80
+            - name: https
+              containerPort: 443
+          volumeMounts:
+            - name: config-vol
+              mountPath: /etc/nginx/conf.d
+            - name: cert-vol
+              mountPath: /etc/nginx/ssl
+              readOnly: true
+      volumes:
+        - name: config-vol
+          configMap:
+            name: nginx-tls-conf
+        - name: cert-vol
+          secret:
+            secretName: nginx-tls-secret

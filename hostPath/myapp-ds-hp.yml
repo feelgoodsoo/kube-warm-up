@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: myapp-ds-hp
+spec:
+  template:
+    metadata:
+      labels:
+        vol: hp
+    spec:
+      containers:
+        - name: webserver
+          image: nginx:alpine
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: web-content
+              mountPath: /usr/share/nginx/html
+          ports:
+            - containerPort: 80
+      volumes:
+        - name: web-content
+          hostPath:
+            type: Directory
+            path: /home/vagrant/srv/web_contents
+  selector:
+    matchLabels:
+      vol: hp

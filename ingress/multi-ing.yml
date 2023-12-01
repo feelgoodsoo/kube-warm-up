@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: multi-ing
+spec:
+  rules:
+  - host: myapp.example.com
+    http:
+      paths:
+      - path: /web1
+        pathType: Prefix
+        backend:
+          service:
+            name: basic-np
+            port:
+              number: 80 
+      - path: /web2
+        pathType: Prefix
+        backend:
+          service:
+            name: svc-lb
+            port:
+              number: 80
